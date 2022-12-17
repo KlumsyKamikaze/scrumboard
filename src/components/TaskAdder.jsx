@@ -55,6 +55,25 @@ function TaskAdder({ tasks, setTasks }) {
       isClosable: true,
     });
   };
+
+  const checkboxHandler = (id) => {
+    console.log("fired");
+    setTasks((oldValue) => {
+      const newValue = oldValue.map((element) => {
+        if (element.id === id) {
+          const prevStatus = element.status;
+          return {
+            ...element,
+            status: prevStatus === COMPLETED ? PENDING : COMPLETED,
+          };
+        } else {
+          return element;
+        }
+      });
+      localStorage.setItem("scrum_tasks", JSON.stringify(newValue));
+      return newValue;
+    });
+  };
   return (
     <VStack height="100%" width="100%" spacing="2rem" alignItems="flex-start">
       <HStack width="100%" spacing="2rem">
@@ -102,7 +121,9 @@ function TaskAdder({ tasks, setTasks }) {
                   <Checkbox
                     colorScheme="facebook"
                     borderColor="facebook.400"
+                    // value={status === COMPLETED}
                     isChecked={status === COMPLETED}
+                    onChange={() => checkboxHandler(id)}
                   ></Checkbox>
                   <Text fontWeight={500}>{task}</Text>
                 </HStack>
